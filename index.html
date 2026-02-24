@@ -675,15 +675,22 @@ function renderHomePage(daily, speaking, reading) {
     ...Object.keys(readByMonth),
   ])].sort();
 
+  // Trailing 12 months only for the chart
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - 11);
+  cutoff.setDate(1);
+  const cutoffKey = monthKey(cutoff);
+  const chartKeys = allKeys.filter(k => k >= cutoffKey);
+
   const ctx = document.getElementById('chart-overview').getContext('2d');
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: allKeys.map(monthLabel),
+      labels: chartKeys.map(monthLabel),
       datasets: [
         {
           label: 'Listening',
-          data: allKeys.map(k => +((listenByMonth[k] || 0) / 60).toFixed(1)),
+          data: chartKeys.map(k => +((listenByMonth[k] || 0) / 60).toFixed(1)),
           backgroundColor: C.red   + 'bb',
           borderColor: C.red,
           borderWidth: 1,
@@ -691,7 +698,7 @@ function renderHomePage(daily, speaking, reading) {
         },
         {
           label: 'Speaking',
-          data: allKeys.map(k => +((speakByMonth[k] || 0) / 60).toFixed(1)),
+          data: chartKeys.map(k => +((speakByMonth[k] || 0) / 60).toFixed(1)),
           backgroundColor: C.blue  + 'bb',
           borderColor: C.blue,
           borderWidth: 1,
@@ -699,7 +706,7 @@ function renderHomePage(daily, speaking, reading) {
         },
         {
           label: 'Reading',
-          data: allKeys.map(k => +((readByMonth[k]  || 0) / 60).toFixed(1)),
+          data: chartKeys.map(k => +((readByMonth[k]  || 0) / 60).toFixed(1)),
           backgroundColor: C.green + 'bb',
           borderColor: C.green,
           borderWidth: 1,

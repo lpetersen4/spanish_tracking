@@ -673,7 +673,7 @@ function renderHomePage(daily, speaking, reading) {
   const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = daily.filter(d => d.listening > 0).length;
   const doneBooks   = reading.filter(r => r.finished);
-  const totalWords  = reading.reduce((s, r) => s + r.words, 0);
+  const totalWords  = reading.filter(r => r.finished || r.title.toLowerCase().endsWith('(unfinished)')).reduce((s, r) => s + r.words, 0);
 
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);

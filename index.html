@@ -601,7 +601,9 @@ function parseReading(rows) {
       if (!unfinished) {
         const p = dateStr.split('/');
         if (p.length === 3) {
-          date = new Date(2000 + +p[2], +p[0] - 1, +p[1]);
+          const yearRaw = +p[2];
+          const year = yearRaw < 100 ? 2000 + yearRaw : yearRaw;
+          date = new Date(year, +p[0] - 1, +p[1]);
           if (isNaN(date)) date = null;
         }
       }

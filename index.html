@@ -1118,10 +1118,13 @@ async function main() {
       fetchCSV('141435762'),
     ]);
 
+    const today = new Date();
+    today.setHours(23, 59, 59, 999); // include all of today
+
     appData = {
-      daily:    parseDailyLog(dailyRaw),
-      speaking: parseSpeaking(speakingRaw),
-      reading:  parseReading(readingRaw),
+      daily:    parseDailyLog(dailyRaw).filter(d => d.date <= today),
+      speaking: parseSpeaking(speakingRaw).filter(s => s.date <= today),
+      reading:  parseReading(readingRaw).filter(r => !r.date || r.date <= today),
     };
 
     document.getElementById('loading').classList.add('hidden');

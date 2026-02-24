@@ -653,7 +653,7 @@ function renderHomePage(daily, speaking, reading) {
   const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = daily.filter(d => d.listening > 0).length;
   const doneBooks   = reading.filter(r => r.finished);
-  const totalWords  = reading.reduce((s, r) => s + r.words, 0);
+  const totalWords  = doneBooks.reduce((s, r) => s + r.words, 0);
 
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);
@@ -965,8 +965,9 @@ function renderReadingPage(reading) {
     const dateStr = r.date
       ? r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
       : 'In progress';
-    const pct    = Math.round(r.words / allMax * 100);
-    const color  = r.finished ? 'var(--green)' : 'var(--gold)';
+    const pct      = Math.round(r.words / allMax * 100);
+    const abandoned = !r.finished && r.title.toLowerCase().endsWith('(unfinished)');
+    const color    = r.finished ? 'var(--green)' : abandoned ? 'var(--muted)' : 'var(--gold)';
     const wLabel = r.words >= 1000 ? `${(r.words / 1000).toFixed(0)}k` : `${r.words}`;
     return `
       <div class="book-item ${r.finished ? '' : 'unfinished'}">

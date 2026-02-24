@@ -672,7 +672,7 @@ function renderHomePage(daily, speaking, reading) {
   const listenHrs   = daily.reduce((s, d) => s + d.listening, 0) / 60;
   const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = daily.filter(d => d.listening > 0).length;
-  const doneBooks   = reading.filter(r => r.finished);
+  const doneBooks   = [...new Map(reading.filter(r => r.finished).map(r => [r.title, r])).values()];
   const totalWords  = reading.filter(r => r.finished || r.title.toLowerCase().endsWith('(unfinished)')).reduce((s, r) => s + r.words, 0);
 
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);

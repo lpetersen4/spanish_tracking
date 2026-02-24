@@ -673,7 +673,7 @@ function renderHomePage(daily, speaking, reading) {
   const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = daily.filter(d => d.listening > 0).length;
   const doneBooks   = reading.filter(r => r.finished);
-  const totalWords  = doneBooks.reduce((s, r) => s + r.words, 0);
+  const totalWords  = reading.reduce((s, r) => s + r.words, 0);
 
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);
@@ -1038,7 +1038,7 @@ function renderYearSection(year, daily, speaking, reading, showCallouts) {
   const speakHrs    = speakY.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = dailyY.filter(d => d.listening > 0 || d.speaking > 0 || d.reading > 0).length;
   const doneBooks   = readingY.filter(r => r.finished);
-  const totalWords  = doneBooks.reduce((s, r) => s + r.words, 0);
+  const totalWords  = readingY.reduce((s, r) => s + r.words, 0);
 
   document.getElementById(`${pfx}-highlights`).innerHTML = `
     <div class="stat-card" data-c="red">

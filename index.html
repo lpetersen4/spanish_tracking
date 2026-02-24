@@ -442,8 +442,13 @@
     <div id="page-reading" class="page hidden">
       <h2 class="section-title">Reading</h2>
       <div class="card">
-        <div class="card-hdr">Books</div>
+        <div class="card-hdr">Finished Books</div>
         <div id="books-list"></div>
+      </div>
+      <h2 class="section-title hidden" id="unfinished-section-title">Currently Reading</h2>
+      <div class="card hidden" id="unfinished-card">
+        <div class="card-hdr">In Progress</div>
+        <div id="unfinished-list"></div>
       </div>
     </div>
 
@@ -646,7 +651,7 @@ function renderHomePage(daily, speaking, reading) {
   const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = daily.filter(d => d.listening > 0).length;
   const doneBooks   = reading.filter(r => r.finished);
-  const totalWords  = doneBooks.reduce((s, r) => s + r.words, 0);
+  const totalWords  = reading.reduce((s, r) => s + r.words, 0);
 
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);
@@ -931,12 +936,34 @@ function renderSpeakingPage(speaking) {
 
 // ── Reading Page ──────────────────────────────────────────────────────────────
 function renderReadingPage(reading) {
-  const maxWords = Math.max(...reading.map(r => r.words), 1);
-  document.getElementById('books-list').innerHTML = reading.map(r => {
+  // Merge same-title entries (e.g., books split across years for tracking)
+  const mergedMap = new Map();
+  reading.forEach(r => {
+    if (mergedMap.has(r.title)) {
+      const existing = mergedMap.get(r.title);
+      existing.words += r.words;
+      if (r.date && (!existing.date || r.date > existing.date)) existing.date = r.date;
+      if (r.finished) existing.finished = true;
+    } else {
+      mergedMap.set(r.title, { ...r });
+    }
+  });
+  const merged = [...mergedMap.values()].sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return a.date - b.date;
+  });
+
+  const finished   = merged.filter(r => r.finished);
+  const unfinished = merged.filter(r => !r.finished);
+  const allMax     = Math.max(...merged.map(r => r.words), 1);
+
+  function bookItemHTML(r) {
     const dateStr = r.date
       ? r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
       : 'In progress';
-    const pct    = Math.round(r.words / maxWords * 100);
+    const pct    = Math.round(r.words / allMax * 100);
     const color  = r.finished ? 'var(--green)' : 'var(--gold)';
     const wLabel = r.words >= 1000 ? `${(r.words / 1000).toFixed(0)}k` : `${r.words}`;
     return `
@@ -948,7 +975,15 @@ function renderReadingPage(reading) {
         </div>
         <span class="book-words" style="color:${color}">${wLabel} words</span>
       </div>`;
-  }).join('');
+  }
+
+  document.getElementById('books-list').innerHTML = finished.map(bookItemHTML).join('');
+
+  if (unfinished.length > 0) {
+    document.getElementById('unfinished-section-title').classList.remove('hidden');
+    document.getElementById('unfinished-card').classList.remove('hidden');
+    document.getElementById('unfinished-list').innerHTML = unfinished.map(bookItemHTML).join('');
+  }
 }
 
 // ── Year in Review Page ───────────────────────────────────────────────────────

@@ -303,14 +303,19 @@ async function fetchCSV(gid) {
 // ── Parsers ───────────────────────────────────────────────────────────────────
 function parseDailyLog(rows) {
   return rows
-    .filter(r => r.Year && r.Month && r.Day !== undefined && r.Month in MONTH_IDX)
-    .map(r => ({
-      date:      new Date(+r.Year, MONTH_IDX[r.Month], +r.Day),
-      listening: +r.Listening  || 0,
-      reading:   +r.Reading    || 0,
-      speaking:  +r.Speaking   || 0,
-    }))
-    .filter(r => !isNaN(r.date))
+    .filter(r => r.Date)
+    .map(r => {
+      const p = r.Date.split('/');
+      if (p.length < 3) return null;
+      const date = new Date(+p[2], +p[0] - 1, +p[1]);
+      return {
+        date,
+        listening: +r.Listening || 0,
+        reading:   +r.Reading   || 0,
+        speaking:  +r.Speaking  || 0,
+      };
+    })
+    .filter(r => r && !isNaN(r.date))
     .sort((a, b) => a.date - b.date);
 }
 

@@ -621,7 +621,8 @@ function parseReading(rows) {
           if (isNaN(date)) date = null;
         }
       }
-      return { date, title, words, finished: !unfinished && !!date };
+      const abandoned = title.toLowerCase().endsWith('(unfinished)');
+      return { date, title, words, finished: !abandoned && !unfinished && !!date };
     })
     .filter(Boolean)
     .sort((a, b) => {

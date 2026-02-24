@@ -207,6 +207,20 @@
     .book-item:hover { border-color: var(--green); box-shadow: 0 2px 10px rgba(72, 196, 144, 0.15); }
     .book-item.unfinished { opacity: 0.65; }
     .book-item.unfinished:hover { border-color: var(--gold); box-shadow: 0 2px 10px rgba(232, 184, 48, 0.15); }
+    .book-item.abandoned:hover { border-color: var(--muted); box-shadow: 0 2px 10px rgba(148, 136, 180, 0.15); }
+    .dnf-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      background: #ede8f5;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
     .book-date  { font-size: 0.7rem; color: var(--muted); min-width: 72px; flex-shrink: 0; }
     .book-title { flex: 1; font-size: 0.88rem; }
     .book-bar-bg { width: 110px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
@@ -965,14 +979,19 @@ function renderReadingPage(reading) {
     const dateStr = r.date
       ? r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
       : 'In progress';
-    const pct      = Math.round(r.words / allMax * 100);
+    const pct       = Math.round(r.words / allMax * 100);
     const abandoned = !r.finished && r.title.toLowerCase().endsWith('(unfinished)');
-    const color    = r.finished ? 'var(--green)' : abandoned ? 'var(--muted)' : 'var(--gold)';
-    const wLabel = r.words >= 1000 ? `${(r.words / 1000).toFixed(0)}k` : `${r.words}`;
+    const color     = r.finished ? 'var(--green)' : abandoned ? 'var(--muted)' : 'var(--gold)';
+    const wLabel    = r.words >= 1000 ? `${(r.words / 1000).toFixed(0)}k` : `${r.words}`;
+    const displayTitle = abandoned
+      ? r.title.replace(/\s*\(unfinished\)\s*$/i, '')
+      : r.title;
+    const itemClass = r.finished ? '' : abandoned ? 'unfinished abandoned' : 'unfinished';
     return `
-      <div class="book-item ${r.finished ? '' : 'unfinished'}">
+      <div class="book-item ${itemClass}">
         <span class="book-date">${dateStr}</span>
-        <span class="book-title">${r.title}</span>
+        <span class="book-title">${displayTitle}</span>
+        ${abandoned ? '<span class="dnf-badge">did not finish</span>' : ''}
         <div class="book-bar-bg">
           <div class="book-bar" style="width:${pct}%;background:${color}"></div>
         </div>

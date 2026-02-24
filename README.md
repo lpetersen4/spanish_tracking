@@ -1,5 +1,7 @@
 # Mi Progreso en Español
 
+**Live site:** https://lpetersen4.github.io/spanish_tracking/
+
 A single-page website that visualizes my Spanish study progress, pulling data live from Google Sheets.
 
 ## What it tracks

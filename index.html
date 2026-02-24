@@ -36,7 +36,7 @@
     /* ── Header ── */
     header {
       background: linear-gradient(160deg, #6a0010 0%, #c60b1e 45%, #9a0015 75%, #180005 100%);
-      padding: 56px 24px 48px;
+      padding: 40px 24px 32px;
       text-align: center;
     }
     .flag { font-size: 2.8rem; margin-bottom: 10px; }
@@ -51,6 +51,41 @@
       color: rgba(255,255,255,0.6);
       font-style: italic;
       font-size: 1rem;
+    }
+
+    /* ── Nav ── */
+    #site-nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 4px;
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #site-nav::-webkit-scrollbar { display: none; }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 14px 16px;
+      position: relative;
+      white-space: nowrap;
+      transition: color 0.15s;
+    }
+    .nav-btn:hover { color: var(--text); }
+    .nav-btn.active { color: var(--text); }
+    .nav-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 16px; right: 16px;
+      height: 2px;
+      background: var(--red);
+      border-radius: 2px 2px 0 0;
     }
 
     /* ── Layout ── */
@@ -77,12 +112,17 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .hidden { display: none !important; }
 
+    /* ── Pages ── */
+    .page { display: block; }
+    .page > .section-title:first-child,
+    .page > .stats-row:first-child { margin-top: 0; }
+
     /* ── Stats ── */
     .stats-row {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 12px;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
     @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 500px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
@@ -137,7 +177,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      margin-bottom: 0;
     }
     @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
 
@@ -158,11 +197,125 @@
     .book-item:hover { border-color: var(--green); }
     .book-item.unfinished { opacity: 0.6; }
     .book-item.unfinished:hover { border-color: var(--gold); }
-    .book-date { font-size: 0.7rem; color: var(--muted); min-width: 72px; flex-shrink: 0; }
+    .book-date  { font-size: 0.7rem; color: var(--muted); min-width: 72px; flex-shrink: 0; }
     .book-title { flex: 1; font-size: 0.88rem; }
     .book-bar-bg { width: 110px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
-    .book-bar { height: 100%; border-radius: 3px; }
+    .book-bar   { height: 100%; border-radius: 3px; }
     .book-words { font-size: 0.8rem; font-weight: 700; min-width: 65px; text-align: right; flex-shrink: 0; }
+
+    /* ── Year in Review ── */
+    .yr-section { padding: 8px 0 40px; }
+
+    .yr-heading {
+      font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .yr-heading span { color: var(--red); }
+
+    .yr-divider {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 0 0 8px;
+    }
+
+    /* 4-column highlight grid for year stats */
+    .yr-highlights {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 700px) { .yr-highlights { grid-template-columns: repeat(2, 1fr); } }
+
+    /* Monthly breakdown table */
+    .yr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .yr-table th {
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .yr-table th:not(:first-child),
+    .yr-table td:not(:first-child) { text-align: right; }
+    .yr-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      font-variant-numeric: tabular-nums;
+    }
+    .yr-table tbody tr:last-child td,
+    .yr-table tfoot tr:last-child td { border-bottom: none; }
+    .yr-table tbody tr:hover td { background: rgba(255,255,255,0.03); }
+    .yr-table tfoot td {
+      font-weight: 700;
+      border-top: 2px solid var(--border);
+    }
+
+    /* Callout cards */
+    .yr-callouts {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .callout-card {
+      flex: 1;
+      min-width: 180px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px 20px;
+    }
+    .callout-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .callout-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1.1;
+    }
+    .callout-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Peak day fact line */
+    .yr-fact {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    /* 2026 coming-soon placeholder */
+    .coming-soon {
+      margin-top: 24px;
+      padding: 48px 24px;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--r);
+      text-align: center;
+      color: var(--muted);
+    }
+    .coming-soon-icon { font-size: 2rem; display: block; margin-bottom: 12px; }
+    .coming-soon p { font-size: 0.95rem; }
 
     /* ── Footer ── */
     footer {
@@ -185,6 +338,14 @@
   <p>Tracking my journey to fluency</p>
 </header>
 
+<nav id="site-nav">
+  <button class="nav-btn active" data-page="home">Home</button>
+  <button class="nav-btn" data-page="listening">Listening</button>
+  <button class="nav-btn" data-page="speaking">Speaking</button>
+  <button class="nav-btn" data-page="reading">Reading</button>
+  <button class="nav-btn" data-page="year-review">Year in Review</button>
+</nav>
+
 <main>
   <div id="loading">
     <div class="spinner"></div>
@@ -193,69 +354,116 @@
 
   <div id="content" class="hidden">
 
-    <!-- Stats row -->
-    <div class="stats-row">
-      <div class="stat-card" data-c="red">
-        <span class="stat-num" id="s-listen">—</span>
-        <span class="stat-lbl">hrs listening</span>
+    <!-- ── Home ── -->
+    <div id="page-home" class="page">
+      <div class="stats-row">
+        <div class="stat-card" data-c="red">
+          <span class="stat-num" id="s-listen">—</span>
+          <span class="stat-lbl">hrs listening</span>
+        </div>
+        <div class="stat-card" data-c="blue">
+          <span class="stat-num" id="s-speak">—</span>
+          <span class="stat-lbl">hrs speaking</span>
+        </div>
+        <div class="stat-card" data-c="orange">
+          <span class="stat-num" id="s-sessions">—</span>
+          <span class="stat-lbl">sessions</span>
+        </div>
+        <div class="stat-card" data-c="green">
+          <span class="stat-num" id="s-words">—</span>
+          <span class="stat-lbl">words read</span>
+        </div>
+        <div class="stat-card" data-c="gold">
+          <span class="stat-num" id="s-days">—</span>
+          <span class="stat-lbl">days studied</span>
+        </div>
+        <div class="stat-card" data-c="purple">
+          <span class="stat-num" id="s-books">—</span>
+          <span class="stat-lbl">books read</span>
+        </div>
       </div>
-      <div class="stat-card" data-c="blue">
-        <span class="stat-num" id="s-speak">—</span>
-        <span class="stat-lbl">hrs speaking</span>
-      </div>
-      <div class="stat-card" data-c="orange">
-        <span class="stat-num" id="s-sessions">—</span>
-        <span class="stat-lbl">sessions</span>
-      </div>
-      <div class="stat-card" data-c="green">
-        <span class="stat-num" id="s-words">—</span>
-        <span class="stat-lbl">words read</span>
-      </div>
-      <div class="stat-card" data-c="gold">
-        <span class="stat-num" id="s-days">—</span>
-        <span class="stat-lbl">days studied</span>
-      </div>
-      <div class="stat-card" data-c="purple">
-        <span class="stat-num" id="s-books">—</span>
-        <span class="stat-lbl">books read</span>
+      <h2 class="section-title">All Activity</h2>
+      <div class="card">
+        <div class="card-hdr">Combined Monthly Activity (hours)</div>
+        <canvas id="chart-overview"></canvas>
       </div>
     </div>
 
-    <!-- Listening -->
-    <h2 class="section-title">Listening</h2>
-    <div class="card">
-      <div class="card-hdr">Daily Listening (minutes)</div>
-      <canvas id="chart-daily"></canvas>
-    </div>
-    <div class="two-col">
+    <!-- ── Listening ── -->
+    <div id="page-listening" class="page hidden">
+      <h2 class="section-title">Listening</h2>
       <div class="card">
-        <div class="card-hdr">Monthly Hours</div>
-        <canvas id="chart-monthly"></canvas>
+        <div class="card-hdr">Daily Listening (minutes)</div>
+        <canvas id="chart-daily"></canvas>
       </div>
-      <div class="card">
-        <div class="card-hdr">Cumulative Listening Hours</div>
-        <canvas id="chart-cumulative"></canvas>
-      </div>
-    </div>
-
-    <!-- Speaking -->
-    <h2 class="section-title">Speaking</h2>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-hdr">Monthly Speaking Activity</div>
-        <canvas id="chart-speak-monthly"></canvas>
-      </div>
-      <div class="card">
-        <div class="card-hdr">Time by Tutor</div>
-        <canvas id="chart-tutors"></canvas>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-hdr">Monthly Hours</div>
+          <canvas id="chart-monthly"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-hdr">Cumulative Listening Hours</div>
+          <canvas id="chart-cumulative"></canvas>
+        </div>
       </div>
     </div>
 
-    <!-- Reading -->
-    <h2 class="section-title">Reading</h2>
-    <div class="card">
-      <div class="card-hdr">Books</div>
-      <div id="books-list"></div>
+    <!-- ── Speaking ── -->
+    <div id="page-speaking" class="page hidden">
+      <h2 class="section-title">Speaking</h2>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-hdr">Monthly Speaking Activity</div>
+          <canvas id="chart-speak-monthly"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-hdr">Time by Tutor</div>
+          <canvas id="chart-tutors"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Reading ── -->
+    <div id="page-reading" class="page hidden">
+      <h2 class="section-title">Reading</h2>
+      <div class="card">
+        <div class="card-hdr">Books</div>
+        <div id="books-list"></div>
+      </div>
+    </div>
+
+    <!-- ── Year in Review ── -->
+    <div id="page-year-review" class="page hidden">
+
+      <!-- 2025 Full Year -->
+      <div class="yr-section">
+        <h2 class="yr-heading"><span>2025</span> — Full Year</h2>
+        <div class="yr-highlights" id="yr25-highlights"></div>
+        <h3 class="section-title">Highlights</h3>
+        <div class="yr-callouts" id="yr25-callouts"></div>
+        <p class="yr-fact" id="yr25-fact"></p>
+        <h3 class="section-title">Month by Month</h3>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div id="yr25-table"></div>
+        </div>
+      </div>
+
+      <hr class="yr-divider" />
+
+      <!-- 2026 Year to Date -->
+      <div class="yr-section">
+        <h2 class="yr-heading"><span>2026</span> — Year to Date</h2>
+        <div class="yr-highlights" id="yr26-highlights"></div>
+        <h3 class="section-title">Month by Month</h3>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div id="yr26-table"></div>
+        </div>
+        <div class="coming-soon">
+          <span class="coming-soon-icon">📅</span>
+          <p>Full 2026 Year in Review coming December 2026</p>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -270,11 +478,10 @@
 <script>
 const SHEET_ID = '1SH2D4hFjkevn6iq8wBwh79_Ei2jQX--BxMwcgOTPdzM';
 
-// Chart.js dark-theme defaults
-Chart.defaults.color          = '#7d8590';
-Chart.defaults.borderColor    = '#30363d';
-Chart.defaults.font.family    = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
-Chart.defaults.font.size      = 12;
+Chart.defaults.color       = '#7d8590';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size   = 12;
 
 const C = {
   red:    '#f85149',
@@ -285,13 +492,38 @@ const C = {
   orange: '#ffa657',
 };
 
-const MONTH_IDX = {
-  January:0, February:1, March:2, April:3, May:4, June:5,
-  July:6, August:7, September:8, October:9, November:10, December:11,
-};
 const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-// ── Fetch ────────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────────
+let appData = null;
+const pagesRendered = {};
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.nav-btn[data-page="${name}"]`).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById('page-' + name).classList.remove('hidden');
+  if (appData && !pagesRendered[name]) {
+    pagesRendered[name] = true;
+    renderPage(name);
+  }
+}
+
+function renderPage(name) {
+  const { daily, speaking, reading } = appData;
+  if (name === 'home')        renderHomePage(daily, speaking, reading);
+  if (name === 'listening')   renderListeningPage(daily);
+  if (name === 'speaking')    renderSpeakingPage(speaking);
+  if (name === 'reading')     renderReadingPage(reading);
+  if (name === 'year-review') renderYearReviewPage(daily, speaking, reading);
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => showPage(btn.dataset.page));
+});
+
+// ── Fetch ─────────────────────────────────────────────────────────────────────
 async function fetchCSV(gid) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
   const resp = await fetch(url);
@@ -329,8 +561,8 @@ function parseSpeaking(rows) {
       return {
         date,
         duration: +r.Duration || 0,
-        type:     (r.Type   || '').trim(),
-        tutor:    (r.Tutor  || '').trim(),
+        type:     (r.Type  || '').trim(),
+        tutor:    (r.Tutor || '').trim(),
       };
     })
     .filter(r => r && !isNaN(r.date))
@@ -373,7 +605,7 @@ function rollingAvg(arr, n = 7) {
 }
 
 function monthKey(d)   { return `${d.getFullYear()}-${String(d.getMonth()).padStart(2,'0')}`; }
-function monthLabel(k) { const [y,m] = k.split('-'); return `${MON[+m]} ${y}`; }
+function monthLabel(k) { const [y, m] = k.split('-'); return `${MON[+m]} ${y}`; }
 
 function gradient(ctx, color, a1 = 0.45, a2 = 0) {
   const g  = ctx.createLinearGradient(0, 0, 0, 300);
@@ -386,19 +618,20 @@ function gradient(ctx, color, a1 = 0.45, a2 = 0) {
 }
 
 const GRID_COLOR = '#21262d';
-const timeXAxis = {
+const timeXAxis  = {
   type: 'time',
   time: { unit: 'month', displayFormats: { month: 'MMM yyyy' } },
   grid: { display: false },
 };
 
-// ── Stats ─────────────────────────────────────────────────────────────────────
-function renderStats(daily, speaking, reading) {
-  const listenHrs = daily.reduce((s, d) => s + d.listening, 0) / 60;
-  const speakHrs  = speaking.reduce((s, r) => s + r.duration, 0) / 60;
+// ── Home Page ─────────────────────────────────────────────────────────────────
+function renderHomePage(daily, speaking, reading) {
+  // Stats
+  const listenHrs   = daily.reduce((s, d) => s + d.listening, 0) / 60;
+  const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
   const daysStudied = daily.filter(d => d.listening > 0).length;
-  const doneBooks = reading.filter(r => r.finished);
-  const totalWords = doneBooks.reduce((s, r) => s + r.words, 0);
+  const doneBooks   = reading.filter(r => r.finished);
+  const totalWords  = doneBooks.reduce((s, r) => s + r.words, 0);
 
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);
@@ -406,13 +639,83 @@ function renderStats(daily, speaking, reading) {
   document.getElementById('s-words').textContent    = (totalWords / 1000).toFixed(0) + 'k';
   document.getElementById('s-days').textContent     = daysStudied;
   document.getElementById('s-books').textContent    = doneBooks.length;
+
+  // Combined monthly chart
+  const listenByMonth = {};
+  const readByMonth   = {};
+  daily.forEach(d => {
+    const k = monthKey(d.date);
+    listenByMonth[k] = (listenByMonth[k] || 0) + d.listening;
+    readByMonth[k]   = (readByMonth[k]   || 0) + d.reading;
+  });
+  const speakByMonth = {};
+  speaking.forEach(s => {
+    const k = monthKey(s.date);
+    speakByMonth[k] = (speakByMonth[k] || 0) + s.duration;
+  });
+
+  const allKeys = [...new Set([
+    ...Object.keys(listenByMonth),
+    ...Object.keys(speakByMonth),
+    ...Object.keys(readByMonth),
+  ])].sort();
+
+  const ctx = document.getElementById('chart-overview').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: allKeys.map(monthLabel),
+      datasets: [
+        {
+          label: 'Listening',
+          data: allKeys.map(k => +((listenByMonth[k] || 0) / 60).toFixed(1)),
+          backgroundColor: C.red   + 'bb',
+          borderColor: C.red,
+          borderWidth: 1,
+          borderRadius: 3,
+        },
+        {
+          label: 'Speaking',
+          data: allKeys.map(k => +((speakByMonth[k] || 0) / 60).toFixed(1)),
+          backgroundColor: C.blue  + 'bb',
+          borderColor: C.blue,
+          borderWidth: 1,
+          borderRadius: 3,
+        },
+        {
+          label: 'Reading',
+          data: allKeys.map(k => +((readByMonth[k]  || 0) / 60).toFixed(1)),
+          backgroundColor: C.green + 'bb',
+          borderColor: C.green,
+          borderWidth: 1,
+          borderRadius: 3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 45 } },
+        y: { stacked: true, beginAtZero: true, grid: { color: GRID_COLOR }, ticks: { callback: v => `${v}h` } },
+      },
+      plugins: {
+        legend: { position: 'top', align: 'end' },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}h` },
+        },
+      },
+    },
+  });
 }
 
-// ── Chart: Daily listening ────────────────────────────────────────────────────
-function renderDailyChart(daily) {
-  const ctx  = document.getElementById('chart-daily').getContext('2d');
+// ── Listening Page ────────────────────────────────────────────────────────────
+function renderListeningPage(daily) {
+  // Daily
+  const ctx1 = document.getElementById('chart-daily').getContext('2d');
   const vals = daily.map(d => d.listening);
-  new Chart(ctx, {
+  new Chart(ctx1, {
     type: 'line',
     data: {
       labels: daily.map(d => d.date),
@@ -421,7 +724,7 @@ function renderDailyChart(daily) {
           label: 'Daily',
           data: vals,
           borderColor: 'rgba(248,81,73,0.3)',
-          backgroundColor: gradient(ctx, C.red, 0.3, 0),
+          backgroundColor: gradient(ctx1, C.red, 0.3, 0),
           borderWidth: 1,
           pointRadius: 0,
           fill: true,
@@ -446,11 +749,7 @@ function renderDailyChart(daily) {
       interaction: { mode: 'index', intersect: false },
       scales: {
         x: timeXAxis,
-        y: {
-          beginAtZero: true,
-          grid: { color: GRID_COLOR },
-          ticks: { callback: v => `${v}m` },
-        },
+        y: { beginAtZero: true, grid: { color: GRID_COLOR }, ticks: { callback: v => `${v}m` } },
       },
       plugins: {
         legend: { position: 'top', align: 'end' },
@@ -458,26 +757,23 @@ function renderDailyChart(daily) {
       },
     },
   });
-}
 
-// ── Chart: Monthly listening ──────────────────────────────────────────────────
-function renderMonthlyChart(daily) {
+  // Monthly
   const byMonth = {};
   daily.forEach(d => {
     const k = monthKey(d.date);
     byMonth[k] = (byMonth[k] || 0) + d.listening;
   });
-  const keys   = Object.keys(byMonth).sort();
-  const ctx    = document.getElementById('chart-monthly').getContext('2d');
-  const grad   = gradient(ctx, C.red, 0.85, 0.35);
-  new Chart(ctx, {
+  const keys = Object.keys(byMonth).sort();
+  const ctx2 = document.getElementById('chart-monthly').getContext('2d');
+  new Chart(ctx2, {
     type: 'bar',
     data: {
       labels: keys.map(monthLabel),
       datasets: [{
         label: 'Hours',
         data: keys.map(k => +(byMonth[k] / 60).toFixed(1)),
-        backgroundColor: grad,
+        backgroundColor: gradient(ctx2, C.red, 0.85, 0.35),
         borderRadius: 5,
         borderSkipped: false,
       }],
@@ -494,21 +790,19 @@ function renderMonthlyChart(daily) {
       },
     },
   });
-}
 
-// ── Chart: Cumulative listening ───────────────────────────────────────────────
-function renderCumulativeChart(daily) {
+  // Cumulative
   let cum = 0;
-  const data = daily.map(d => { cum += d.listening / 60; return { x: d.date, y: +cum.toFixed(2) }; });
-  const ctx  = document.getElementById('chart-cumulative').getContext('2d');
-  new Chart(ctx, {
+  const cumData = daily.map(d => { cum += d.listening / 60; return { x: d.date, y: +cum.toFixed(2) }; });
+  const ctx3 = document.getElementById('chart-cumulative').getContext('2d');
+  new Chart(ctx3, {
     type: 'line',
     data: {
       datasets: [{
         label: 'Total hours',
-        data,
+        data: cumData,
         borderColor: C.gold,
-        backgroundColor: gradient(ctx, C.gold, 0.35, 0),
+        backgroundColor: gradient(ctx3, C.gold, 0.35, 0),
         borderWidth: 2.5,
         pointRadius: 0,
         fill: true,
@@ -529,8 +823,8 @@ function renderCumulativeChart(daily) {
   });
 }
 
-// ── Chart: Monthly speaking ───────────────────────────────────────────────────
-function renderSpeakingMonthly(speaking) {
+// ── Speaking Page ─────────────────────────────────────────────────────────────
+function renderSpeakingPage(speaking) {
   const byMonth = {};
   speaking.forEach(s => {
     const k = monthKey(s.date);
@@ -539,6 +833,7 @@ function renderSpeakingMonthly(speaking) {
     byMonth[k].count += 1;
   });
   const keys = Object.keys(byMonth).sort();
+
   new Chart(document.getElementById('chart-speak-monthly'), {
     type: 'bar',
     data: {
@@ -579,14 +874,12 @@ function renderSpeakingMonthly(speaking) {
       },
     },
   });
-}
 
-// ── Chart: Tutor donut ────────────────────────────────────────────────────────
-function renderTutorChart(speaking) {
   const byTutor = {};
   speaking.forEach(s => { byTutor[s.tutor] = (byTutor[s.tutor] || 0) + s.duration; });
   const sorted  = Object.entries(byTutor).sort((a, b) => b[1] - a[1]);
   const palette = [C.blue, C.green, C.purple, C.orange, C.red, C.gold];
+
   new Chart(document.getElementById('chart-tutors'), {
     type: 'doughnut',
     data: {
@@ -614,15 +907,15 @@ function renderTutorChart(speaking) {
   });
 }
 
-// ── Books list ────────────────────────────────────────────────────────────────
-function renderBooks(reading) {
+// ── Reading Page ──────────────────────────────────────────────────────────────
+function renderReadingPage(reading) {
   const maxWords = Math.max(...reading.map(r => r.words), 1);
   document.getElementById('books-list').innerHTML = reading.map(r => {
     const dateStr = r.date
       ? r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
       : 'In progress';
-    const pct   = Math.round(r.words / maxWords * 100);
-    const color = r.finished ? 'var(--green)' : 'var(--gold)';
+    const pct    = Math.round(r.words / maxWords * 100);
+    const color  = r.finished ? 'var(--green)' : 'var(--gold)';
     const wLabel = r.words >= 1000 ? `${(r.words / 1000).toFixed(0)}k` : `${r.words}`;
     return `
       <div class="book-item ${r.finished ? '' : 'unfinished'}">
@@ -636,6 +929,171 @@ function renderBooks(reading) {
   }).join('');
 }
 
+// ── Year in Review Page ───────────────────────────────────────────────────────
+function renderYearReviewPage(daily, speaking, reading) {
+  renderYearSection(2025, daily, speaking, reading, true);
+  renderYearSection(2026, daily, speaking, reading, false);
+}
+
+function renderYearSection(year, daily, speaking, reading, showCallouts) {
+  const pfx      = `yr${String(year).slice(2)}`;
+  const dailyY   = daily.filter(d => d.date.getFullYear() === year);
+  const speakY   = speaking.filter(s => s.date.getFullYear() === year);
+  const readingY = reading.filter(r => r.date && r.date.getFullYear() === year);
+
+  // Highlight stats
+  const listenHrs   = dailyY.reduce((s, d) => s + d.listening, 0) / 60;
+  const speakHrs    = speakY.reduce((s, r) => s + r.duration, 0) / 60;
+  const daysStudied = dailyY.filter(d => d.listening > 0 || d.speaking > 0 || d.reading > 0).length;
+  const doneBooks   = readingY.filter(r => r.finished);
+  const totalWords  = doneBooks.reduce((s, r) => s + r.words, 0);
+
+  document.getElementById(`${pfx}-highlights`).innerHTML = `
+    <div class="stat-card" data-c="red">
+      <span class="stat-num">${Math.round(listenHrs)}</span>
+      <span class="stat-lbl">hrs listening</span>
+    </div>
+    <div class="stat-card" data-c="blue">
+      <span class="stat-num">${speakHrs.toFixed(1)}</span>
+      <span class="stat-lbl">hrs speaking</span>
+    </div>
+    <div class="stat-card" data-c="green">
+      <span class="stat-num">${(totalWords / 1000).toFixed(0)}k</span>
+      <span class="stat-lbl">words read</span>
+    </div>
+    <div class="stat-card" data-c="gold">
+      <span class="stat-num">${daysStudied}</span>
+      <span class="stat-lbl">days studied</span>
+    </div>
+  `;
+
+  // Monthly table data
+  const speakByMonth  = {};
+  speakY.forEach(s => {
+    const k = monthKey(s.date);
+    if (!speakByMonth[k]) speakByMonth[k] = { mins: 0, count: 0 };
+    speakByMonth[k].mins  += s.duration;
+    speakByMonth[k].count += 1;
+  });
+
+  const listenByMonth = {};
+  const readByMonth   = {};
+  const studyDays     = {};
+  dailyY.forEach(d => {
+    const k = monthKey(d.date);
+    listenByMonth[k] = (listenByMonth[k] || 0) + d.listening;
+    readByMonth[k]   = (readByMonth[k]   || 0) + d.reading;
+    if (d.listening > 0 || d.speaking > 0 || d.reading > 0) {
+      studyDays[k] = (studyDays[k] || 0) + 1;
+    }
+  });
+
+  const allKeys = [...new Set([
+    ...Object.keys(listenByMonth),
+    ...Object.keys(speakByMonth),
+  ])].sort();
+
+  const fh = m => (m / 60).toFixed(1) + 'h';
+  let totListen = 0, totSpeak = 0, totRead = 0, totSessions = 0, totDays = 0;
+
+  const bodyRows = allKeys.map(k => {
+    const listen   = listenByMonth[k] || 0;
+    const speak    = (speakByMonth[k] || {}).mins  || 0;
+    const sessions = (speakByMonth[k] || {}).count || 0;
+    const read     = readByMonth[k] || 0;
+    const days     = studyDays[k]   || 0;
+    totListen += listen; totSpeak += speak; totRead += read;
+    totSessions += sessions; totDays += days;
+    return `<tr>
+      <td>${monthLabel(k)}</td>
+      <td style="color:var(--red)">${fh(listen)}</td>
+      <td style="color:var(--blue)">${fh(speak)}</td>
+      <td>${sessions}</td>
+      <td style="color:var(--green)">${fh(read)}</td>
+      <td>${days}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById(`${pfx}-table`).innerHTML = `
+    <table class="yr-table">
+      <thead><tr>
+        <th>Month</th>
+        <th>Listen</th>
+        <th>Speak</th>
+        <th>Sessions</th>
+        <th>Read</th>
+        <th>Study Days</th>
+      </tr></thead>
+      <tbody>${bodyRows}</tbody>
+      <tfoot><tr>
+        <td>Total</td>
+        <td style="color:var(--red)">${fh(totListen)}</td>
+        <td style="color:var(--blue)">${fh(totSpeak)}</td>
+        <td>${totSessions}</td>
+        <td style="color:var(--green)">${fh(totRead)}</td>
+        <td>${totDays}</td>
+      </tr></tfoot>
+    </table>
+  `;
+
+  if (!showCallouts || allKeys.length === 0) return;
+
+  // Best listening month
+  const bestListenKey = allKeys.reduce((best, k) =>
+    (listenByMonth[k] || 0) > (listenByMonth[best] || 0) ? k : best, allKeys[0]);
+
+  // Best speaking month (from daily log speaking col for consistency with table)
+  const bestSpeakKey = allKeys.reduce((best, k) =>
+    ((speakByMonth[k] || {}).mins || 0) > ((speakByMonth[best] || {}).mins || 0) ? k : best, allKeys[0]);
+
+  // Longest study streak (gap-aware)
+  let maxStreak = 0, curStreak = 0, prevDate = null;
+  dailyY.forEach(d => {
+    const active = d.listening > 0 || d.reading > 0 || d.speaking > 0;
+    const gap    = prevDate ? Math.round((d.date - prevDate) / 86400000) : 1;
+    if (active && gap === 1) {
+      curStreak++;
+      maxStreak = Math.max(maxStreak, curStreak);
+    } else if (active) {
+      curStreak = 1;
+      maxStreak = Math.max(maxStreak, 1);
+    } else {
+      curStreak = 0;
+    }
+    prevDate = d.date;
+  });
+
+  // Peak single day
+  const peakDay = dailyY.reduce((best, d) => d.listening > best.listening ? d : best, dailyY[0]);
+
+  document.getElementById('yr25-callouts').innerHTML = `
+    <div class="callout-card">
+      <div class="callout-label">Best Listening Month</div>
+      <div class="callout-value">${monthLabel(bestListenKey)}</div>
+      <div class="callout-sub">${(listenByMonth[bestListenKey] / 60).toFixed(1)} hours</div>
+    </div>
+    <div class="callout-card">
+      <div class="callout-label">Best Speaking Month</div>
+      <div class="callout-value">${monthLabel(bestSpeakKey)}</div>
+      <div class="callout-sub">${((speakByMonth[bestSpeakKey] || {}).mins || 0) / 60 < 1
+        ? Math.round((speakByMonth[bestSpeakKey] || {}).mins || 0) + ' min'
+        : (((speakByMonth[bestSpeakKey] || {}).mins || 0) / 60).toFixed(1) + ' hours'
+      }</div>
+    </div>
+    <div class="callout-card">
+      <div class="callout-label">Longest Study Streak</div>
+      <div class="callout-value">${maxStreak} days</div>
+      <div class="callout-sub">consecutive days with activity</div>
+    </div>
+  `;
+
+  if (peakDay) {
+    document.getElementById('yr25-fact').textContent =
+      `Best single day: ${peakDay.listening} min on ` +
+      peakDay.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
   try {
@@ -645,20 +1103,15 @@ async function main() {
       fetchCSV('141435762'),
     ]);
 
-    const daily    = parseDailyLog(dailyRaw);
-    const speaking = parseSpeaking(speakingRaw);
-    const reading  = parseReading(readingRaw);
+    appData = {
+      daily:    parseDailyLog(dailyRaw),
+      speaking: parseSpeaking(speakingRaw),
+      reading:  parseReading(readingRaw),
+    };
 
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('content').classList.remove('hidden');
-
-    renderStats(daily, speaking, reading);
-    renderDailyChart(daily);
-    renderMonthlyChart(daily);
-    renderCumulativeChart(daily);
-    renderSpeakingMonthly(speaking);
-    renderTutorChart(speaking);
-    renderBooks(reading);
+    showPage('home');
 
   } catch (err) {
     document.getElementById('loading').innerHTML = `

@@ -427,7 +427,7 @@
         </div>
         <div class="stat-card" data-c="green">
           <span class="stat-num" id="s-pages">—</span>
-          <span class="stat-lbl">pages read</span>
+          <span class="stat-lbl">words read</span>
         </div>
         <div class="stat-card" data-c="purple">
           <span class="stat-num" id="s-books">—</span>
@@ -699,15 +699,13 @@ function renderHomePage(daily, speaking, reading) {
   const daysStudied = daily.filter(d => d.listening > 0).length;
   const doneBooks   = [...new Map(reading.filter(r => r.finished).map(r => [r.title, r])).values()];
   const totalWords  = reading.filter(r => r.finished || r.title.toLowerCase().endsWith('(unfinished)')).reduce((s, r) => s + r.words, 0);
-  const pages       = Math.round(totalWords / 250);
-
   document.getElementById('s-total').textContent    = Math.round(totalHrs);
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
   document.getElementById('s-read').textContent     = Math.round(readHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);
   document.getElementById('s-days').textContent     = daysStudied;
   document.getElementById('s-sessions').textContent = speaking.length;
-  document.getElementById('s-pages').textContent    = pages.toLocaleString();
+  document.getElementById('s-pages').textContent    = (totalWords / 1000).toFixed(0) + 'k';
   document.getElementById('s-books').textContent    = doneBooks.length;
 
   // Combined monthly chart

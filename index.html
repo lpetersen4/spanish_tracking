@@ -122,12 +122,20 @@
     /* ── Stats ── */
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
       gap: 12px;
-      margin-bottom: 32px;
+      margin-bottom: 14px;
     }
-    @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 500px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    .stats-row:last-of-type { margin-bottom: 32px; }
+    .stats-row-1 { grid-template-columns: minmax(0, 420px); justify-content: center; }
+    .stats-row-3 { grid-template-columns: repeat(3, 1fr); }
+    .stats-row-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 700px) {
+      .stats-row-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats-row-1, .stats-row-3 { grid-template-columns: 1fr; }
+      .stats-row-4 { grid-template-columns: repeat(2, 1fr); }
+    }
 
     .stat-card {
       background: var(--surface);
@@ -385,26 +393,41 @@
 
     <!-- ── Home ── -->
     <div id="page-home" class="page">
-      <div class="stats-row">
+      <!-- Row 1: Total combined -->
+      <div class="stats-row stats-row-1">
+        <div class="stat-card" data-c="purple">
+          <span class="stat-num" id="s-total">—</span>
+          <span class="stat-lbl">total hours studied</span>
+        </div>
+      </div>
+      <!-- Row 2: By activity -->
+      <div class="stats-row stats-row-3">
         <div class="stat-card" data-c="red">
           <span class="stat-num" id="s-listen">—</span>
           <span class="stat-lbl">hrs listening</span>
+        </div>
+        <div class="stat-card" data-c="green">
+          <span class="stat-num" id="s-read">—</span>
+          <span class="stat-lbl">hrs reading</span>
         </div>
         <div class="stat-card" data-c="blue">
           <span class="stat-num" id="s-speak">—</span>
           <span class="stat-lbl">hrs speaking</span>
         </div>
-        <div class="stat-card" data-c="orange">
-          <span class="stat-num" id="s-sessions">—</span>
-          <span class="stat-lbl">sessions</span>
-        </div>
-        <div class="stat-card" data-c="green">
-          <span class="stat-num" id="s-words">—</span>
-          <span class="stat-lbl">words read</span>
-        </div>
+      </div>
+      <!-- Row 3: Activity details -->
+      <div class="stats-row stats-row-4">
         <div class="stat-card" data-c="gold">
           <span class="stat-num" id="s-days">—</span>
           <span class="stat-lbl">days studied</span>
+        </div>
+        <div class="stat-card" data-c="orange">
+          <span class="stat-num" id="s-sessions">—</span>
+          <span class="stat-lbl">speaking sessions</span>
+        </div>
+        <div class="stat-card" data-c="green">
+          <span class="stat-num" id="s-pages">—</span>
+          <span class="stat-lbl">pages read</span>
         </div>
         <div class="stat-card" data-c="purple">
           <span class="stat-num" id="s-books">—</span>
@@ -670,16 +693,21 @@ const timeXAxis  = {
 function renderHomePage(daily, speaking, reading) {
   // Stats
   const listenHrs   = daily.reduce((s, d) => s + d.listening, 0) / 60;
+  const readHrs     = daily.reduce((s, d) => s + d.reading, 0) / 60;
   const speakHrs    = speaking.reduce((s, r) => s + r.duration, 0) / 60;
+  const totalHrs    = listenHrs + readHrs + speakHrs;
   const daysStudied = daily.filter(d => d.listening > 0).length;
   const doneBooks   = [...new Map(reading.filter(r => r.finished).map(r => [r.title, r])).values()];
   const totalWords  = reading.filter(r => r.finished || r.title.toLowerCase().endsWith('(unfinished)')).reduce((s, r) => s + r.words, 0);
+  const pages       = Math.round(totalWords / 250);
 
+  document.getElementById('s-total').textContent    = Math.round(totalHrs);
   document.getElementById('s-listen').textContent   = Math.round(listenHrs);
+  document.getElementById('s-read').textContent     = Math.round(readHrs);
   document.getElementById('s-speak').textContent    = speakHrs.toFixed(1);
-  document.getElementById('s-sessions').textContent = speaking.length;
-  document.getElementById('s-words').textContent    = (totalWords / 1000).toFixed(0) + 'k';
   document.getElementById('s-days').textContent     = daysStudied;
+  document.getElementById('s-sessions').textContent = speaking.length;
+  document.getElementById('s-pages').textContent    = pages.toLocaleString();
   document.getElementById('s-books').textContent    = doneBooks.length;
 
   // Combined monthly chart
